@@ -1,0 +1,21 @@
+<h1>오늘의 로또 번호 추첨, 인생역전 가즈아!!!</h1>
+<h2>real_lottos -> {{ real_lottos }} 입니다.</h2>
+<hr>
+
+{% for i in lottos %}
+    <p>{{ i  }}</p>
+{% endfor %}
+<hr>
+
+<h2>로또 번호 비교</h2>
+{% if lottos == real_lottos %}
+    <p>당첨</p>
+{% else %}
+    <p>아쉽네요</p>
+{% endif %}
+
+
+<!-- <from action="/ispal"> 경로
+    <input type="text" name="word"> 네임이라고 정한 박스안에 담겨서 보내진다.
+    <input type="submit">
+</from> -->

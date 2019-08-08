@@ -7,20 +7,20 @@ import requests
 
 #1. Baisc Logic( 기본 로직 )
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'pages/index.html')
 
 def introduce(request):
-    return render(request, 'introduce.html')
+    return render(request, 'pages/introduce.html')
 
 def loremPicsum(request):
-    return render(request, 'loremPicsum.html')
+    return render(request, 'pages/loremPicsum.html')
 
 #2. Template Variable( 템플릿 변수 )
 def dinner(request):
     menu = ['족발', '햄버거', '치킨', '초밥']
     pick = random.choice(menu)
     context = {'pick': pick}
-    return render(request, 'dinner.html', context)
+    return render(request, 'pages/dinner.html', context)
 
 #3. Variable Routing( 동적 라우팅 )
 def hello(request, name, age):
@@ -31,7 +31,7 @@ def hello(request, name, age):
         'age': age,
         'pick': pick
     }
-    return render(request, 'hello.html', context)
+    return render(request, 'pages/hello.html', context)
 
 #4. 실습
 #4-1. 동적 라우팅을 활용하여(name과 age를 인자로 받아) 자기소개 페이지
@@ -43,7 +43,7 @@ def my_introduce(request, name, age):
         'age': age,
         'pick': pick
     }
-    return render(request, 'my_introduce.html', context)
+    return render(request, 'pages/my_introduce.html', context)
 
 #4-2. 두개의 숫자를 인자로 받아(num1, num2) 곱셈 결과를 출력
 def my_mul(request, num1, num2):
@@ -53,7 +53,7 @@ def my_mul(request, num1, num2):
         'num2': num2,
         'num3': num1*num2
     }
-    return render(request, 'my_mul.html', context)
+    return render(request, 'pages/my_mul.html', context)
 
 #4-3. 반지름(r)을 인자로 받아 원의 넓이(area)를 구하시오.
 def my_circle(request, r):
@@ -61,7 +61,7 @@ def my_circle(request, r):
         'r': r,
         'area': r**2*3.14,
     }
-    return render(request, 'my_circle.html', context)
+    return render(request, 'pages/my_circle.html', context)
 
 
 #5. DTL(Django Template Language)
@@ -79,7 +79,7 @@ def template_language(request):
         'empty_list': empty_list,
         'datetimenow': datetimenow,
     }
-    return render(request, 'template_language.html', context)
+    return render(request, 'pages/template_language.html', context)
 
 #6. 실습
 #6-1. isbirth
@@ -94,7 +94,7 @@ def isbirth(request):
         'result': result
     }
 
-    return render(request, 'isbirth.html', context)
+    return render(request, 'pages/isbirth.html', context)
     
 
 #6-2. 회문판별(PALINDROME)
@@ -110,7 +110,7 @@ def ispal(request, word):
         'result': result,
     }
 
-    return render(request, 'ispal.html', context)
+    return render(request, 'pages/ispal.html', context)
 
 #6-3. 로또 변호 추첨
 # lottos -> 1~45 까지의 번호 중 6개를 랜덤으로 pick한 리스트
@@ -126,11 +126,11 @@ def lotto(request):
         'real_lottos': real_lottos,
     }
 
-    return render(request, 'lotto.html', context)
+    return render(request, 'pages/lotto.html', context)
 
 #7. Form - GET ( 엔터를 치는 행위 : GET 요청, 주로 데이터를 조작하는 것이 아니라 읽기 위해 요청하는 것 )
 def throw(request):
-    return render(request, 'throw.html')
+    return render(request, 'pages/throw.html')
 
 def catch(request):
     message = request.GET.get('message')
@@ -139,11 +139,11 @@ def catch(request):
         'message': message,
         'message2': message2,
     }
-    return render(request, 'catch.html', context)
+    return render(request, 'pages/catch.html', context)
 
 
 def ping(request):
-    return render(request, 'ping.html')
+    return render(request, 'pages/ping.html')
 
 def pong(request):
     ping = request.GET.get('ping')
@@ -151,11 +151,11 @@ def pong(request):
     context = {
         'ping': ping
     }
-    return render(request, 'pong.html', context)
+    return render(request, 'pages/pong.html', context)
 
 #8. Form - GET 실습( 아스키 아티 )
 def art(request):
-    return render(request, 'art.html')
+    return render(request, 'pages/art.html')
 
 def result(request):
     #1. form으로 날린 데이터를 받는다.(GET)
@@ -179,12 +179,12 @@ def result(request):
         'result': result,
     }
 
-    return render(request, 'result.html', context)
+    return render(request, 'pages/result.html', context)
 
 #9. Form - POST ( 글을 쓰거나 수정하거나 삭제할때 사용 즉, 어떠한 처리를 해달라고 요청하는 것이다.
 #  보안요소를 넣어놨다. 즉, 특정한 토큰을 넣어서 보내야한다. )
 def user_new(request):
-    return render(request, 'user_new.html')
+    return render(request, 'pages/user_new.html')
 
 def user_create(request):
     name = request.POST.get('name')
@@ -194,4 +194,9 @@ def user_create(request):
         'password': pwd,
     }
 
-    return render(request, 'user_create.html', context)
+    return render(request, 'pages/user_create.html', context)
+
+
+#10. 정적 파일
+def static_example(request):
+    return render(request, 'pages/static_example.html')

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1 class="text-center">PAPAGU</h1>
+    <h2>번역하고 싶은 말을 입력하세요.</h2>
+    <form action="/utilities/translated/" method="GET">
+        <input type="text" name="word">
+        <input type="submit" value="Translate!">
+    </form>
+{% endblock %}

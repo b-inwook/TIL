@@ -529,7 +529,58 @@ def create(request):
 {% endblock %}
 ```
 
+```\
+# update => views.py
+def edit(request, pk):
+    article = Article.objects.get(pk=pk)
+    context = {
+        'article': article
+    }
+    return render(request, 'articles/edit.html', context)
 
+def update(request, pk):
+    article = Article.objects.get(pk=pk)
+    
+    article.title = request.POST.get('title')
+    article.content = request.POST.get('content')
+    article.save()
 
+    return redirect(f'/articles/{article.pk}/')
+```
 
+```
+# edit.html
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1 class="text-center">EDIT</h1>
+    <form action="/articles/{{ article.pk }}/update/" method="POST">
+        {% csrf_token %}
+        <label for="title">Title</label><br>
+        <input type="text" id="title" name="title" value="{{ article.title }}"><br>
+        <label for="content">Content</label><br>
+        <textarea name="content" id="content" cols="30" rows="10">{{ article.content }}</textarea><br>
+        <input type="submit" value="수정완료">
+    </form>
+    <a href="/articles/" target="_self"></a>
+{% endblock %}
+```
+
+```
+# 디테일에 버튼을 넣어주자
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1 class="text-center">DETAIL</h1>
+    <h2>{{ article.pk }}번글</h2> <!-- id나 pk나 똑같이 사용가능 -->
+    <p>글 제목: {{ article.title }}</p>
+    <p>글 내용: {{ article.content }}</p>
+    <p>글 작성시간: {{ article.created_at }}</p>
+    <p>글 생성시간: {{ article.updated_at }}</p>
+    <hr>
+    <a href="/articles/{{ article.pk }}/edit/" target="_self">[글 수정]</a><br>
+    <a href="/articles/{{ article.pk }}/delete/">[글 삭제]</a><br>
+    <a href="/articles/">[메인 페이지로 가기]</a>
+{% endblock %}
+```
 

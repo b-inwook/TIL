@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h2 class="text-center">DETAIL</h2>
+    <h3>{{ article.pk }}번째 글</h3>
+    <hr>
+    <p>글 제목: {{ article.title }}</p>
+    <p>글 내용: {{ article.content}}</p>
+    <p>글 생성 시각: {{ article.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>글 수정 시각: {{ article.updated_at|date:"M, j, Y" }}</p>
+    <hr>
+    <!-- <a href="/articles/{{ article.pk }}/delete/">[글 삭제]</a><br> -->
+    <!-- 아래는 위 표현을 urls.py에서 별명을 설정하여 표현 -->
+    <!-- 우리는 경로를 urls.py에서만 조절하면 된다. -->
+    <a href="{% url 'articles:delete' article.pk %}">[글 삭제]</a><br>
+    <a href="{% url 'articles:edit' article.pk %}">[글 수정]</a><br>
+    <a href="{% url 'articles:index' %}">[메인 페이지]</a>
+{% endblock %}

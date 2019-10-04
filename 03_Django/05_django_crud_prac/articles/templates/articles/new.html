@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h2 class="text-center">NEW</h2>
+    <form action="/articles/create/" method="POST">
+        {% csrf_token %}
+        <label for="title">Title</label><br>
+        <input type="text" name="title" id="title"><br>
+        <br>
+        <label for="content">Content</label><br>
+        <textarea name="content" id="content" cols="30" rows="10"></textarea><br>
+        <input type="submit" value="Done">
+    </form>
+
+{% endblock %}

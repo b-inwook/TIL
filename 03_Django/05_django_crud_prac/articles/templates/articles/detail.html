@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h2 class="text-center">DETAIL</h2>
+    <h3>No.{{ article.pk }}</h3>
+    <hr>
+    <p>Title: {{ article.title }}</p>
+    <p>Content: {{ article.content }}</p>
+    <p>Created at: {{ article.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>Updated at: {{ article.updated_at|date:"M, j, Y" }}</p>
+{% endblock %}

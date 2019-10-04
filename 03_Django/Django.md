@@ -1,8 +1,26 @@
 # Django
 
+1. 가상환경 설정
+2. 가상환경 활성화
+3. Django 설치
+4. 프로젝트 생성
+5. 앱 생성
+6. 셋팅 설정(앱 등록, 시간, 언어설정)
+7. 프로젝트 url(include), 앱 url(views 연결)을 만들고, templates 폴더 생성, 셋팅에 templates 설정
+8. view.py에 기본 index함수 생성하고, base.html, index.html
+9. 설계도, models 작성 및 migrations
+10. DB에 반영, migrate
+11. 
+
+---
+
+
+
+Django : 사용자의 요청에 어떻게 응답할 것인가를 다루게 됨
+
 web service에서 sever의 입장
 
-MTV
+MTV - 참고로 V가 control에 해당함 자세하게 살펴 보면
 
 Model : 데이터를 관리
 
@@ -17,10 +35,6 @@ View : 중간 관리자
 python -m venv venv - 가상환경 만든다.
 
 pip list - 이때 이 명령어를 보면 전역 라이브러리가 모두 보임
-
----
-
-code . 으로 열자
 
 source venv/Scripts/activate - 가상환경 활성화
 
@@ -168,7 +182,7 @@ def index(request):
     return render(request, 'utilities/index.html')
 ```
 
-
+​	
 
 ---
 
@@ -256,7 +270,7 @@ SQLite : 장고에 기본 내장 데이터베이스로 사용
 
 열 - 필드 / 행 - 레코드 
 
-PK(기본키) : 각 행(레코드)의 고유값으로 Primary Key로 불린다. 반드시 설정해야하며, 데이터베이스 관리 및 관계 설명서 주요하게 활용된다.
+PK(기본키) : 각 행(레코드)의 고유값으로 Primary Key로 불린다. 반드시 설정해야하며, 데이터베이스 관리 및 관계 설명서 주요하게 활용된다
 
 ---
 
@@ -437,8 +451,10 @@ urlpatterns = [
 # basic.html 작성
 ```
 
+DB를 다루기 앞서 models 작성
+
 ```
-# 모델
+# models
 from django.db import models
 
 class Article(models.Model):
@@ -451,10 +467,23 @@ class Article(models.Model):
         return f'{self.id}번글 - {self.title}: {self.content}'
 ```
 
+makemigrations를 통해 설계도를 만듬 (쿼리에 날리기전에)
+
 ```
 python manage.py makemigrations
+# model Article이 생성된다.
+
+python manage.py sqlmigrate articles 0001
+# 내부적으로 확인할 수 있다.
+
+python manage.py showmigrations
+# DB에 들어간지 안들어간지 확인 할 수 있음. [X]로 나온다면 DB에 반영이 된 상태다.
+
 python manage.py migrate
+# DB에 적용하는 과정
 ```
+
+이제 함수를 만든다.
 
 ```
 # views.py
@@ -543,7 +572,7 @@ def update(request, pk):
     
     article.title = request.POST.get('title')
     article.content = request.POST.get('content')
-    article.save()
+    article.save() # 저장
 
     return redirect(f'/articles/{article.pk}/')
 ```
@@ -582,5 +611,173 @@ def update(request, pk):
     <a href="/articles/{{ article.pk }}/delete/">[글 삭제]</a><br>
     <a href="/articles/">[메인 페이지로 가기]</a>
 {% endblock %}
+```
+
+
+
+.py 3대장
+
+models, views, urls
+
+---
+
+글을 하나 쓰려면 5개의 필드가 필요함
+
+1. id(자동으로 만들어줌)
+2. title
+
+3. content
+4. created_at
+5. updated_at
+
+---
+
+ORM : SQL문을 쓰지않고 CRUD문으로 연결시켜줌
+
+---
+
+urls.py의 path : 경로로 연결하는 것을 정의
+
+path('', views.index)
+
+에서 기본적으로 만든 app이름이 적혀있다. (articles)
+
+----
+
+주소창에 보내는 것은 모두 GET요청
+
+---
+
+```
+def create(request):
+    title = request.GET.get('title')
+    content = request.GET.get('content')
+
+    #1. 첫번째 방법
+    # article = Article()
+    # article.title = title
+    # article.content = content
+    # article.save()
+
+    #2. 두번째 방법
+    # article = Article(title=title, content=content)
+    # article.save()
+
+    #3. 세번재 방법
+    Article.objects.create(title=title, content=content)
+    
+    return render(request, 'articles/create.html')
+
+```
+
+```
+python manage.py createsuperuser
+#
+```
+
+```
+#admin 꾸미기
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'content', 'created_at', 'updated_at')
+
+admin.site.register(Article, ArticleAdmin)
+```
+
+폴더안은 다음과 같이 이루어 져있다.
+
+articles  crud  db.sqlite3  manage.py  venv
+
+앱       프로젝트    DB                               가상환경
+
+
+
+----
+
+​    return redirect('/articles/')
+
+​    \# 랜더하여 새로운 화면을 띄우는게 아니라 다시 한번 돌아가는것.
+
+​    \# render 는 템플릿을 불러오고, redirect 는 URL로 이동합니다.
+
+​    \# URL 로 이동한다는 건 그 URL 에 맞는 views 가 다시 실행될테고 여기서 render 를 할지
+
+​    # 다시 redirect 할지 결정할 것 입니다. 
+
+
+
+​    \# GET 요청 : 정보(HTML file)를 조회, 신원확인이 필요가 없음, 스키마 정보가 노출, 캐싱할 수 있다.
+
+​    \# POST 요청 : URL에 데이터를 노축하지 않고 요청, 기본보안이 되어있다. 캐싱할 수 없다.
+
+---
+
+​    path('\<int:pk>/', views.detail)
+
+​    \# pk를 int로 변수화시켜, views.detail의 매개변수 pk로 들어간다.
+
+
+
+```
+# detail.html
+{% extends 'base.html' %}
+
+{% block body %}
+    <h2 class="text-center">DETAIL</h2>
+    <h3>{{ article.pk }}번째 글</h3>
+    <hr>
+    <p>글 제목: {{ article.title }}</p>
+    <p>글 내용: {{ article.content}}</p>
+    <p>글 생성 시각: {{ article.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>글 수정 시각: {{ article.updated_at|date:"M, j, Y" }}</p>
+    <hr>
+    <a href="/articles/">[메인 페이지]</a>
+{% endblock %}
+```
+
+```python
+#urls.py
+
+app_name = 'articles'
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('new/', views.new, name='new'),
+    path('create/', views.create, name='create'),
+    path('<int:pk>/', views.detail, name='detail'),
+    path('<int:pk>/delete/', views.delete, name='delete'),
+    # 무언가 삭제하므로 delete 명시
+    path('<int:pk>/edit/', views.edit, name='edit'),
+    path('<int:pk>/update/', views.update, name='update'),
+
+    # pk를 int로 변수화시켜, views.detail의 매개변수 pk로 들어간다.
+]
+```
+
+```html
+    <!-- <a href="/articles/{{ article.pk }}/delete/">[글 삭제]</a><br> -->
+    <!-- 아래는 위 표현을 urls.py에서 별명을 설정하여 표현 -->
+    <!-- 우리는 경로를 urls.py에서만 조절하면 된다. -->
+	<!-- APP_name도 설정해준다. -->
+    <a href="{% url 'articles:delete' article.pk %}">[글 삭제]</a><br>
+    <a href="{% url 'articles:edit' article.pk %}">[글 수정]</a><br>
+    <a href="{% url 'articles:index' %}">[메인 페이지]</a>
+```
+
+```python
+#views.py
+
+def create(request):
+    try:
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        article = Article(title=title, content=content)
+        article.full_clean()
+    except ValidationError:
+        raise ValidationError('Your Error Message')
+    else:
+        article.save()
+        return redirect('articles:detail', article.pk)
+        # redirect는 경로 설정, render는 파일을 보여주는 것
+        # 따라서, redirect는 네이밍한 경로 사용가능
 ```
 

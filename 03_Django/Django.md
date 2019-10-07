@@ -781,3 +781,42 @@ def create(request):
         # 따라서, redirect는 네이밍한 경로 사용가능
 ```
 
+---
+
+## Jobs 라는 APP 새로 만들기
+
+모델을 작성하고, admin 작성
+
+```python
+# admin.py
+from django.contrib import admin
+from .models import Job
+
+# Register your models here.
+class JobAdmin(admin.ModelAdmin):
+    list_display = ('id','name','past_job',)
+
+admin.site.register(Job, JobAdmin)
+```
+
+```
+[urls]
+- url 분리
+- app_name, path name 설정
+[views]
+- index: index.html 렌더링
+- past_life: 사용자가 form으로 넘긴 데이터와 faker 라이브러리를 활용해 전생 직업 생성
+	1. 사용자가 form을 통해서 날린 이름을 받는다.
+	2. DB에 사용자에게 받은 이름이 존재하는지 확인
+	- 존재한다면: 기존 사용자의 past_job을 past_job이라는 변수에 저장
+	- 존재 XX  : faker를 활용하여 새로운 직업을 생성하고 입력받은 사용자 이름과 새로 생성한
+	직업을 DB에 저장
+	3. context로 담아서 past_life.html로 넘김
+[templates]
+- template 구조는 app/templates/app 으로 작성
+- base.html : 기존 프로젝트 폴더에서 확장(extends 사용)
+- index.html : 사용자에게 자신의 이름을 입력할 수 있는 form 제공
+- past_life.html : context로 넘겨 받은 데이터를 출력
+ex) {{ person.name }}님의 전생 직업은 {{ person.past_job }}입니다.
+```
+

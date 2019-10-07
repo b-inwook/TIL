@@ -12,7 +12,11 @@
     <!-- <a href="/articles/{{ article.pk }}/delete/">[글 삭제]</a><br> -->
     <!-- 아래는 위 표현을 urls.py에서 별명을 설정하여 표현 -->
     <!-- 우리는 경로를 urls.py에서만 조절하면 된다. -->
-    <a href="{% url 'articles:delete' article.pk %}">[글 삭제]</a><br>
-    <a href="{% url 'articles:edit' article.pk %}">[글 수정]</a><br>
+    <form action="{% url 'articles:delete' article.pk %}" method=POST>
+        {% csrf_token %}
+        <input type="submit" value="글 삭제" class="btn btn-primary">
+    </form><br>
+    <!-- <a href="{% url 'articles:delete' article.pk %}"></a><br> -->
+    <a href="{% url 'articles:update' article.pk %}">[글 수정]</a><br>
     <a href="{% url 'articles:index' %}">[메인 페이지]</a>
 {% endblock %}

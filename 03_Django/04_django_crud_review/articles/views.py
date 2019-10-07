@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 from .models import Article
+from IPython import embed
 
 def index(request):
     # articles = Article.objects.all()[::-1] # article의 모든 것을 불러와 articles에 저장
@@ -9,22 +10,32 @@ def index(request):
     context = {'articles': articles} # dictionary
     return render(request, 'articles/index.html', context)
 
-def new(request):
-    return render(request, 'articles/new.html')
-
 def create(request):
-    try:
+    # POST 요청일 때
+    if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
         article = Article(title=title, content=content)
-        article.full_clean()
-    except ValidationError:
-        raise ValidationError('Your Error Message')
-    else:
         article.save()
         return redirect('articles:detail', article.pk)
-        # redirect는 경로 설정, render는 파일을 보여주는 것
-        # 따라서, redirect는 네이밍한 경로 사용가능
+    # GET 요청일 때
+    else:
+        return render(request, 'articles/create.html')
+
+
+    # try:
+    #     title = request.POST.get('title')
+    #     content = request.POST.get('content')
+    #     article = Article(title=title, content=content)
+    #     article.full_clean()
+    # except ValidationError:
+    #     raise ValidationError('Your Error Message')
+    # else:
+    #     article.save()
+    #     return redirect('articles:detail', article.pk)
+    # redirect는 경로 설정, render는 파일을 보여주는 것
+    # 따라서, redirect는 네이밍한 경로 사용가능
+
 
     #
     # title = request.POST.get('title')
@@ -59,18 +70,20 @@ def detail(request, pk):
 
 def delete(request, pk):
     article = Article.objects.get(pk=pk)
-    article.delete()
-    return redirect('articles:index')
-
-# 글 하나를 가지고와서 화면에 프린트해주는 것
-def edit(reqeust, pk): 
-    article = Article.objects.get(pk=pk)
-    context = {'article' : article}
-    return render(reqeust, 'articles/edit.html', context)
+    if request.method == "POST":
+        article.delete()
+        return redirect('articles:index')
+    else:
+        # else문을 사용하면 원하는 곳으로 보낼 수도 있다.
+        return redirect('articles:detail', article.pk)
 
 def update(request, pk):
     article = Article.objects.get(pk=pk)
-    article.title = request.POST.get('title')
-    article.content = request.POST.get('content')
-    article.save()
-    return redirect('articles:detail', article.pk)
+    if request.method == 'POST':
+        article.title = request.POST.get('title')
+        article.content = request.POST.get('content')
+        article.save()
+        return redirect('articles:detail', article.pk)
+    else:
+        context = {'article' : article}
+        return render(request, 'articles/update.html', context)

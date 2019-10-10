@@ -820,3 +820,63 @@ admin.site.register(Job, JobAdmin)
 ex) {{ person.name }}님의 전생 직업은 {{ person.past_job }}입니다.
 ```
 
+
+
+```python
+# 두가지 방법으로 댓글을 게시글에 접근
+# N 대 1의 관계
+article = Article.objects.get(pk=1)
+comment = Comment(article_id=article.pk, content='first-comment')
+comment.save()
+comment = Comment(article=article, content='second-comment')
+comment.save()
+
+#아티클에서 댓글은 전부다 가져와서 접근해야한다.
+# 1 대 N의 관계
+article.comment_set.all()
+
+# 만일, models.ForeignKey에서 related_name='comments'을 설정하는 순간
+# 1의 입장에서 N을 부를 수 있음
+article.comments.all().first().content
+```
+
+
+
+메모리 누수를 방지하기 위해서 `iterator()`을 사용한다.
+
+---
+
+장고는 자동으로 _id를 붙여준다
+
+`article_id`
+
+```python
+#models.py
+
+from django.db import models
+
+class Article(models.Model):
+    title = models.CharField(max_length=20)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'제목: {self.title}, 내용: {self.content}'
+
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments') # 게시글이 지워지면 댓글 모두 지워진다.
+    content = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # 정보를 위한 정보, ex) 사진에 대한 부가적인 정보
+    class Meta:
+        # order_by는 
+        ordering = ['-pk', ]
+
+    def __str__(self):
+        # return f'댓글: {self.content}'
+        return f'<Article({self.article_id}): Comment({self.pk} - {self.content})>'
+```
+

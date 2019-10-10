@@ -3,6 +3,7 @@ from .models import Job
 from faker import Faker
 from decouple import config
 import requests
+from pprint import pprint
 
 def index(request):
     return render(request, 'jobs/index.html')
@@ -41,5 +42,25 @@ def past_life(request):
     except IndexError:
         image = None
         
-    context = {'person': person, 'image': image}
+    # NAVER IMAGE
+    #1. 요청 헤더 정보 준비
+    NAVER_ID = config('NAVER_ID')
+    NAVER_SECRET = config('NAVER_SECRET')
+
+    headers = {
+        'X-Naver-Client-Id': NAVER_ID,
+        'X-Naver-CLient-Secret': NAVER_SECRET,
+        }
+    #2. 요청 URL 준비
+    naver_url = f'https://openapi.naver.com/v1/search/image?query={past_job}&filter=medium&display=1'
+
+    #3. 실제 요청 보내기
+    naver_data = requests.get(naver_url, headers=headers).json()  # requests module : json으로 형변환
+    # pprint(naver_data)
+
+    #4. 이미지 링크 추출하기
+    naver_image = naver_data.get('items')[0].get('link')
+
+    context = {'person': person, 'image': image, 'naver_image': naver_image}
+
     return render(request, 'jobs/past_life.html', context)

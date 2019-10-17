@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block body %}
     <h2 class="text-center">DETAIL</h2>
+    {% if article.image %}
+        <img src="{{ article.image.url }}" alt="{{ article.image }}">
+        <!-- 썸네일 이미지 <img src="{{ article.image_thumbnail.url }}" alt="{{ article.image }}"> -->
+    {% else %}
+        <img src="{% static 'articles/images/noimage.png' %}" alt="noimage">
+    {% endif %}
     <h3>{{ article.pk }}번째 글</h3>
     <hr>
     <p>글 제목: {{ article.title }}</p>
-    <p>글 내용: {{ article.content}}</p>
+    <p>글 내용: {{ article.content }}</p>
     <p>글 생성 시각: {{ article.created_at|date:"SHORT_DATE_FORMAT" }}</p>
     <p>글 수정 시각: {{ article.updated_at|date:"M, j, Y" }}</p>
     <hr>
@@ -13,12 +20,11 @@
     <form action="{% url 'articles:comments_create' article.pk %}" method="POST">
         {% csrf_token %}
         <label for="content">COMMENT</label><br>
-        <input type="text" name=content id=content><br>
+        <input type="text" name="content" id="content"><br>
         <input type="submit" value="댓글 작성" class="btn btn-warning">
     </form>
-    <hr>    
-    <!-- <p><b>{{ comments|length}}개의 댓글</b></p> -->
-    <p><b>{{ article.comments.all|length }}개의 댓글</b></p>
+    <hr>
+    <p><b>{{ comments|length }}개의 댓글</b></p>
     <hr>
     <p><b>댓글 목록</b></p>
     {% for comment in comments %}
@@ -27,21 +33,17 @@
             {% csrf_token %}
             <input type="submit" value="댓글 삭제" class="btn btn-danger">
         </form>
-        <a href="{% url 'articles:comments_update' article.pk comment.pk %}">[댓글 수정]</a><br><br>
-        {% empty %}
-            <p><b>댓글이 없습니다. 작성해주세요.</b></p>
-    {% endfor%}
+        <a href="{% url 'articles:comments_update' article.pk comment.pk%}">[댓글 수정]</a>
 
-
+        </form>
+    {% empty %}
+        <p><b>댓글이 없네유....댓글 좀 써주세유..</b></p>
+    {% endfor %}
     <hr>
-    <!-- <a href="/articles/{{ article.pk }}/delete/">[글 삭제]</a><br> -->
-    <!-- 아래는 위 표현을 urls.py에서 별명을 설정하여 표현 -->
-    <!-- 우리는 경로를 urls.py에서만 조절하면 된다. -->
     <form action="{% url 'articles:delete' article.pk %}" method="POST">
         {% csrf_token %}
         <input type="submit" value="글 삭제" class="btn btn-primary">
-    </form><br>
-    <!-- <a href="{% url 'articles:delete' article.pk %}"></a><br> -->
+    </form>
     <a href="{% url 'articles:update' article.pk %}">[글 수정]</a><br>
     <a href="{% url 'articles:index' %}">[메인 페이지]</a>
 {% endblock %}

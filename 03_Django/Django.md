@@ -1,16 +1,31 @@
 # Django
 
 1. 가상환경 설정
+
 2. 가상환경 활성화
+
 3. Django 설치
+
 4. 프로젝트 생성
+
 5. 앱 생성
+
 6. 셋팅 설정(앱 등록, 시간, 언어설정)
+
 7. 프로젝트 url(include), 앱 url(views 연결)을 만들고, templates 폴더 생성, 셋팅에 templates 설정
+
 8. view.py에 기본 index함수 생성하고, base.html, index.html
+
 9. 설계도, models 작성 및 migrations
+
 10. DB에 반영, migrate
-11. 
+
+11. python manage.py createsuperuser (admin유저 생성)
+
+    * pip freeze > requirements.txt : pip install 했던 목록 생성
+    * pip install -r requirements.txt : requirements.txt 목록 모두 설치
+
+    (안되는 것도 있음)
 
 ---
 

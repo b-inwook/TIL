@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@@xr8v-&k5dpx_=os3%inbb7z@1ne^g=i2!-+-kvg)hz9$4e@a'
+SECRET_KEY = 'w+(04ihf2#yw&xdjj_-6f$iw(@begg(u!t@qyg(n0srqxkeg1e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'imagekit',
 ]
 
 MIDDLEWARE = [
@@ -120,4 +121,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# 웹 페이지에서 사용할 정적 파일의 최상위 URL 경로(주의! 실제 파일이 위치한 디렉토리는 아님)
 STATIC_URL = '/static/'
+
+# 정적 파일이 실제 위치한 경로 (crud/assets)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'crud', 'assets'),
+]
+
+# STATIC_URL과 비슷.
+# 업로드된 파일의 주소(URL)를 만들어줌 
+# 실제 이미지 파일이 업로드 된 디렉토리는 아님
+MEDIA_URL = '/media/'
+
+# 사용자가 업로드한 이미지 파일의 저장 위치
+# 업로드가 끝난 이미지 파일을 위치 시킬 최상위 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

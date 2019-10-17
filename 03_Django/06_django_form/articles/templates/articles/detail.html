@@ -1,0 +1,40 @@
+{% extends 'articles/base.html' %}
+{% load bootstrap4 %}
+
+{% block body %}
+    <h1 class="text-center">Details</h1>
+    <p>No. {{article.pk}}</p>
+    <hr>
+    <p>Title : {{ article.title }}</p>
+    <p>Content : {{ article.content }}</p>
+    <p>Created at : {{ article.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>Updated at : {{ article.updated_at|date:"M, j, Y" }}</p>
+    <hr>
+    <form action="{% url 'articles:comments_create' article.pk %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form }} 
+        {# 실제로 이렇게 form만 적어져도 된다. #}
+        <input type="submit" value="Submit" class="btn btn-dark">
+    </form>
+    <hr>
+    <p><b>Comment List</b></p>
+    <p><b>현재까지 댓글 수: {{ comments.count }}</b></p>
+    {% for comment in comments %}
+        <div>
+            <p>댓글 {{ forloop.revcounter }} : {{ comment.content }}</p>
+            <form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="댓글 삭제"  style="height:30px; width:80px; font-size:12px" class="btn btn-warning">
+            </form>
+        </div>
+    {% empty %}
+        <p><b>댓글이 없습니다.</b></p>
+    {% endfor %}
+    <hr>
+    <form action="{% url 'articles:delete' article.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+    </form>
+    <a href="{% url 'articles:update' article.pk %}">[ Update ]</a>
+    <a href="{% url 'articles:index' %}">[ Main page ]</a>
+{% endblock %}

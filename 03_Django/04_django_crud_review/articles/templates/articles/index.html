@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block body %}
     <h2 class="text-center">Articles</h2>
+    <img src="{% static 'articles/images/simpson.jpg' %}" alt="simpson-image">
     {% for article in articles %}
         <p>글 번호: {{ article.id }}</p>
-        <p>글 제목: {{ article.title}} </p>
+        <p>글 제목: {{ article.title }}</p>
         <a href="{% url 'articles:detail' article.pk %}">[상세 글]</a>
         <hr>
     {% endfor %}

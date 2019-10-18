@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1>영화 목록</h1>
+    <a href="#">새 영화 등록</a>
+    {% for movie in movies %}
+        {# 영화관련 이미지 넣기 #}
+        <p>영화제목 : {{ movie.title }}</p>
+        <p>평점 : {{ movie.score }}</p>
+    {% endfor %}
+{% endblock %}
